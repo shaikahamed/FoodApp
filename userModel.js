@@ -17,19 +17,25 @@ const { Schema } = mongoose;
 const userSchema = new Schema({
     name:{
         type: String,
-        required: true
+        required: [true, "name is missing"]
     },
     password:{
         type: String,
-        required: true
+        required: [true, "password is missing"]
     },
     confirmPassword:{
         type: String,
-        required: true
+        required: [true, "confirm password is missing"],
+        validate:{
+            validator: function(){
+                return this.password == this.confirmPassword;
+            },
+            message: "password mismatch",
+        }
     },
     email:{
         type: String,
-        required: true,
+        required: [true, "email is missing"],
         unique: true
     },
     phoneNo:{

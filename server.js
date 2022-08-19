@@ -16,8 +16,8 @@ app.listen(3000, function () {
 app.post('/signup', async function (req, res) {
     try {
         let data = req.body;
-        console.log(data);
-        let newUser = userModel.create(data);
+        let newUser = await userModel.create(data);
+        console.log(newUser);
         res.json({
             message: "Data received",
             data: data
