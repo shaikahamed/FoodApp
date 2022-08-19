@@ -12,7 +12,7 @@ app.listen(3000, function () {
     console.log("Server started at port 3000");
 })
 
-//post request from the user
+//post request from the user for signup new user
 app.post('/signup', async function (req, res) {
     try {
         let data = req.body;
@@ -26,4 +26,32 @@ app.post('/signup', async function (req, res) {
         res.send(err.message);
     }
     
+})
+
+
+//post request from the user for login of existing user
+app.post('/login', async function(req, res){
+    try{
+        let data = req.body;
+        // console.log(data);
+        let {email, password}= data;
+        if(email && password){
+            let user = await userModel.findOne({email:email});
+            if(user){
+                //user with given email exists
+                if(user.password == password){
+                    res.send("Login Successful");
+                }
+                else{
+                    res.send("Enter valid credentials");
+                }
+            }else{
+                res.send("Email doesn't exist! SignUp now...");
+            }
+        }else{
+            res.send("Email or password fields can't be empty!!!");
+        }
+    }catch(error){
+        res.send(error.message);
+    }
 })
