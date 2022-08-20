@@ -70,8 +70,25 @@ app.post('/login', async function(req, res){
 })
 
 //fetch the cookie sent previously
-app.get('/users', function(req, res){
+app.get('/users', protectRoute, async function(req, res){
     console.log(req.cookies);
-    res.send("Cookie read");
+    let users =  await userModel.find();
+    res.json(users);
 })
 
+function protectRoute(req, res, next){
+    try{
+        let cookie = req.cookies;
+        if(cookie.JWT){
+            let JWT = cookie.JWT;
+            let token = jsonWebToken.verify(JWT, secretKey);
+            console.log(token);
+            next();
+        }else{
+            res.send("You need to login first.");
+        }
+    }catch(error){
+        console.log(error.message);
+        res.send(error.message);
+    }
+}
