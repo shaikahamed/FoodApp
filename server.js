@@ -69,12 +69,28 @@ app.post('/login', async function(req, res){
     }
 })
 
-//fetch the cookie sent previously
+//fetch all the users available in mongodb using the jwt token sent previously
 app.get('/users', protectRoute, async function(req, res){
     console.log(req.cookies);
     let users =  await userModel.find();
     res.json(users);
 })
+
+//fetch a particular user document once logs in using the jwt token cookie
+app.get('/user', protectRoute, async function(req, res){
+    try{
+        const userId = req.userId;
+        //find user by given user Id
+        let userData = await userModel.findById(userId);
+        res.json({
+            userData: userData,
+            message: "Data of logged in user fetched.",
+        })
+    }catch(error){
+        res.send(error.message);
+    }
+})
+
 
 function protectRoute(req, res, next){
     try{
@@ -83,6 +99,8 @@ function protectRoute(req, res, next){
             let JWT = cookie.JWT;
             let token = jsonWebToken.verify(JWT, secretKey);
             console.log(token);
+            let userId = token.data;
+            req.userId = userId;
             next();
         }else{
             res.send("You need to login first.");
