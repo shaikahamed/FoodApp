@@ -2,11 +2,19 @@
 
 const express = require('express')
 const app = express();
-
 const cookieParser = require('cookie-parser');
+const jsonWebToken = require('jsonwebtoken');
+
 app.use(express.json());
 app.use(cookieParser());
 const userModel = require('./userModel');
+
+//secret key for jwt token
+/*format of JWT
+    var jwt = require('jsonwebtoken');
+    var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+*/ 
+let secretKey = 'jdfsladf3904jslkdjf';
 
 //listen
 app.listen(3000, function () {
@@ -41,7 +49,10 @@ app.post('/login', async function(req, res){
             if(user){
                 //user with given email exists
                 if(user.password == password){
-                    res.cookie("sample","cookie");
+                    let token = jsonWebToken.sign({ data:user['_id'] }, secretKey);
+                    console.log(token);
+                    //store this token as a cookie on the user web browser
+                    res.cookie("JWT", token);
                     res.send("Login Successful");
                 }
                 else{
@@ -61,4 +72,6 @@ app.post('/login', async function(req, res){
 //fetch the cookie sent previously
 app.get('/users', function(req, res){
     console.log(req.cookies);
+    res.send("Cookie read");
 })
+
