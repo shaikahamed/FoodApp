@@ -3,8 +3,9 @@
 const express = require('express')
 const app = express();
 
+const cookieParser = require('cookie-parser');
 app.use(express.json());
-
+app.use(cookieParser());
 const userModel = require('./userModel');
 
 //listen
@@ -40,6 +41,7 @@ app.post('/login', async function(req, res){
             if(user){
                 //user with given email exists
                 if(user.password == password){
+                    res.cookie("sample","cookie");
                     res.send("Login Successful");
                 }
                 else{
@@ -54,4 +56,9 @@ app.post('/login', async function(req, res){
     }catch(error){
         res.send(error.message);
     }
+})
+
+//fetch the cookie sent previously
+app.get('/users', function(req, res){
+    console.log(req.cookies);
 })
