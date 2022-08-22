@@ -91,7 +91,7 @@ app.get('/user', protectRoute, async function(req, res){
     }
 })
 
-
+//middleware for checking the correct user
 function protectRoute(req, res, next){
     try{
         let cookie = req.cookies;
@@ -110,3 +110,59 @@ function protectRoute(req, res, next){
         res.send(error.message);
     }
 }
+
+//forgot password
+app.patch('/forgotPassword', async function(req, res){
+    try{
+        let {email} = req.body;
+        let otp = otpGenerator();
+        let afterFiveMin = Date.now();
+        let updatedUser = await userModel.findOneAndUpdate({email},{otp:otp, otpExpiry:afterFiveMin},{new:true});
+        console.log(updatedUser);
+        res.json({
+            user: updatedUser,
+            message: "User record updated with OTP"
+        })
+    }catch(error){
+        res.send(error.message);
+    }
+})
+
+function otpGenerator(){
+    return Math.floor(Math.random() * 1000000);
+}
+
+//reset password
+app.patch('/resetPassword', async function(req, res){
+    try{
+        let {email,otp,password,confirmPassword} = req.body;
+        let updatedUser = await userModel.findOne({email});
+        let currentTime = Date.now();
+        if(updatedUser.otpExpiry < currentTime){
+            if(updatedUser.otp != otp){
+                res.json({
+                    message:"Incorrect OTP!",
+                })
+            }
+            else{
+                let user = await userModel.findOneAndUpdate({otp},{password, confirmPassword}, {runValidators: true, new: true});
+                delete user.otp;
+                delete user.otpExpiry;
+                await user.save();
+                res.json({
+                    user:user,
+                    message: "Password Updated.",
+                })
+            }
+        }else{
+            delete updatedUser.otp;
+            delete updatedUser.otpExpiry;
+            await updatedUser.save();
+            res.json({
+                message:"OTP Expired!",
+            })
+        }
+    }catch(error){
+        res.send(error.message);
+    }
+})

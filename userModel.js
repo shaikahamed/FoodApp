@@ -43,6 +43,12 @@ const userSchema = new Schema({
         maxLength:10, 
         minLength:10
     },
+    otp:{
+        type:String,
+    },
+    otpExpiry:{
+        type:Date,
+    },
     pic:{
         type: String,
         default:"logo2.png"
