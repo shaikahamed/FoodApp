@@ -1,3 +1,7 @@
+
+/*This is a copy of the server.js file in case of any mishaps*/
+
+
 const express = require('express')
 const app = express();
 const cookieParser = require('cookie-parser');
