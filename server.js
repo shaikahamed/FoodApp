@@ -3,7 +3,7 @@ const app = express();
 
 const {userRouter} = require("./Routes/userRoutes");
 const {authRouter} = require("./Routes/authRoutes");
-
+const {planRouter} = require("./Routes/planRoutes");
 const cookieParser = require('cookie-parser');
 
 app.use(express.json());
@@ -11,6 +11,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth",authRouter);
 app.use("/api/v1/user",userRouter);
+app.use("/api/v1/plan",planRouter);
 
 //secret key for jwt token
 /*format of JWT

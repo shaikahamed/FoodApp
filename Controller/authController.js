@@ -15,7 +15,9 @@ async function signUpController(req, res) {
             data: data
         })
     } catch (err) {
-        res.send(err.message);
+        res.status(500).json({
+            result: err.message
+        });
     }
 
 }
@@ -34,19 +36,21 @@ async function loginController(req, res) {
                     console.log(token);
                     //store this token as a cookie on the user web browser
                     res.cookie("JWT", token);
-                    res.send("Login Successful");
+                    res.status(200).json({user});
                 }
                 else {
-                    res.send("Enter valid credentials");
+                    res.status(400).json({result:"Email or password incorrect"})
                 }
             } else {
-                res.send("Email doesn't exist! SignUp now...");
+                res.status(400).json({result:"User with this email doesn't exist. Kindly SignUp"})
             }
         } else {
-            res.send("Email or password fields can't be empty!!!");
+            res.status(400).json({result:"Kindly enter mail and password fields."})
         }
     } catch (error) {
-        res.send(error.message);
+        res.status(500).json({
+            result: err.message
+        });
     }
 }
 
@@ -65,8 +69,9 @@ function protectRoute(req, res, next) {
             res.send("You need to login first.");
         }
     } catch (error) {
-        console.log(error.message);
-        res.send(error.message);
+        res.status(500).json({
+            result: err.message
+        });
     }
 }
 
@@ -92,7 +97,9 @@ async function forgotPasswordController(req, res) {
             })
         }
     } catch (error) {
-        res.send(error.message);
+        res.status(500).json({
+            result: err.message
+        });
     }
 }
 
