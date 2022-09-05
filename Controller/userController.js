@@ -13,12 +13,12 @@ async function profileController(req, res){
         const userId = req.userId;
         //find user by given user Id
         let userData = await userModel.findById(userId);
-        res.json({
-            userData: userData,
+        res.status(200).json({
+            user: userData,
             message: "Data of logged in user fetched.",
         })
     }catch(error){
-        res.send(error.message);
+        res.status(500).json({error: error.message});
     }
 }
 

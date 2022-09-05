@@ -114,7 +114,7 @@ async function resetPasswordController(req, res) {
         let currentTime = Date.now();
         if (updatedUser.otpExpiry < currentTime) {
             if (updatedUser.otp != otp) {
-                res.json({
+                res.status(200).json({
                     message: "Incorrect OTP!",
                 })
             }
@@ -123,7 +123,7 @@ async function resetPasswordController(req, res) {
                 delete user.otp;
                 delete user.otpExpiry;
                 await user.save();
-                res.json({
+                res.status(200).json({
                     user: user,
                     message: "Password Updated.",
                 })
@@ -132,12 +132,12 @@ async function resetPasswordController(req, res) {
             delete updatedUser.otp;
             delete updatedUser.otpExpiry;
             await updatedUser.save();
-            res.json({
+            res.status(200).json({
                 message: "OTP Expired!",
             })
         }
     } catch (error) {
-        res.send(error.message);
+        res.status(500).json({message:error.message});
     }
 }
 

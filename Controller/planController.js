@@ -33,7 +33,7 @@ async function createPlanController(req, res){
 async function getPlanController(req, res){
     try{
         let id = req.params.planRoutes;
-        let planData = foodPlanModel.findById(id);
+        let planData = await foodPlanModel.findById(id);
         res.status(200).json({
             message: "plan found",
             plan: planData,
