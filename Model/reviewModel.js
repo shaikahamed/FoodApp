@@ -1,5 +1,7 @@
 
 const mongoose = require("mongoose");
+const foodPlanModel = require("./planModel");
+const userModel = require("./userModel");
 
 const reviewSchema = mongoose.Schema({
     description:{
@@ -19,12 +21,12 @@ const reviewSchema = mongoose.Schema({
     user:{
         type: mongoose.Schema.ObjectId,
         required: [true, "you need to be a user to review, kindly login first."],
-        ref: FoodUserModel,
+        ref: userModel
     },
     plan:{
         type: mongoose.Schema.ObjectId,
         required: [true, "you need to select a plan to review"],
-        ref: foodPlanModel,
+        ref: foodPlanModel
     }
 })
 

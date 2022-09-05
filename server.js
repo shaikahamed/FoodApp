@@ -23,7 +23,24 @@ app.post("/api/v1/review", async function(req, res){
         let reviewModel = await foodReviewModel.create(data);
         res.status(201).json({
             message: "review created",
-            data: data,
+            data:reviewModel,
+        })
+    }catch(err){
+        res.status(500).json({
+            message: err.message,
+        })
+    }
+})
+
+app.get("/api/v1/review", async function(req, res){
+    try{
+        //populate the user and plan for which review has been given using populate method
+        let allReviews = await foodReviewModel.find().
+                                populate({path:'user', select: 'name'}).
+                                populate({path: 'plan', select: 'name price'});
+        res.status(200).json({
+            message: "All reviews sent",
+            allReviews,
         })
     }catch(err){
         res.status(500).json({
