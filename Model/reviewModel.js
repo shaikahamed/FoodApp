@@ -21,12 +21,12 @@ const reviewSchema = mongoose.Schema({
     user:{
         type: mongoose.Schema.ObjectId,
         required: [true, "you need to be a user to review, kindly login first."],
-        ref: userModel
+        ref: userModel,
     },
     plan:{
         type: mongoose.Schema.ObjectId,
         required: [true, "you need to select a plan to review"],
-        ref: foodPlanModel
+        ref: "foodPlanModel"
     }
 })
 

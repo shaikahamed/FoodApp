@@ -1,5 +1,6 @@
 
 const mongoose = require("mongoose");
+const foodReviewModel = require("./reviewModel");
 
 let planSchema = new mongoose.Schema({
     name: {
@@ -26,6 +27,13 @@ let planSchema = new mongoose.Schema({
             },
             message: "discount can't be greater than 50% of the price.",
         }
+    },
+    reviews:{
+        type: [mongoose.Schema.ObjectId],
+        ref: foodReviewModel,
+    },
+    avgRating:{
+        type:Number
     }
 })
 
